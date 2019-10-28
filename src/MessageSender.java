@@ -70,7 +70,7 @@ public class MessageSender
         // YOUR CODE SHOULD START HERE ---------------------------------
         // No changes are needed to the statements above
 
-
+        System.out.println("gitTest");
 
         // The following statement shows how the frame sender is invoked.
         // At the moment it just passes a fixed string.
