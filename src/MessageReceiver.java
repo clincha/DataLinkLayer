@@ -114,17 +114,28 @@ public class MessageReceiver {
 
   // You may add private methods if you wish
   private String getFrameData(String frame) throws ProtocolException {
+    //MTU
+    if(frame.length() > mtu)
+      throw new ProtocolException("Frame size exceeds MTU");
+
     Matcher matcher = pattern.matcher(frame);
     if (matcher.find()) {
+      //Checksum
       String frameChecksum = frame.substring(frame.length() - 3, frame.length() - 1);
       String calculatedChecksum = String.format("%02d", frame.substring(1, frame.length() - 3).chars().sum() % 100);
+      if (!frameChecksum.equals(calculatedChecksum))
+        throw new ProtocolException("Invalid checksum");
 
-      if (frameChecksum.equals(calculatedChecksum)) {
-        if (matcher.group(1).equals("E")) return matcher.group(3);
-        if (matcher.group(1).equals("D")) return matcher.group(3) + getFrameData(physicalLayer.receiveFrame());
-      } else {
-        throw new ProtocolException("Check sum was wrong");
-      }
+      //Message Length
+      String frameMessageLength = matcher.group(2);
+      String calculatedMessageLength = String.format("%02d", matcher.group(3).length());
+      if (!frameMessageLength.equals(calculatedMessageLength))
+        throw new ProtocolException("Message length was incorrect");
+
+      if (matcher.group(1).equals("E"))
+        return matcher.group(3);
+      if (matcher.group(1).equals("D"))
+        return matcher.group(3) + getFrameData(physicalLayer.receiveFrame());
     }
     throw new ProtocolException("Malformed frame");
   }

@@ -73,6 +73,7 @@ public class MessageSender {
     int messageLength = mtu - FRAME_METADATA_SIZE;
 
     if (messageLength <= 0) throw new ProtocolException("MTU is too small for frame");
+    if (messageLength >= 100) messageLength = 99;
 
     int messageSegmentsCount = ((int) Math.ceil(((float) message.length()) / ((float) messageLength)));
 
@@ -92,7 +93,7 @@ public class MessageSender {
 
     for (int i = 0; i < messageSegmentsCount; i++) {
       String messageSegment = i == (messageSegmentsCount - 1) ? "E-" : "D-";
-      messageSegment = messageSegment+ String.format("%02d", messageSegments[i].length()) + "-" + messageSegments[i] + "-";
+      messageSegment = messageSegment+ String.format("%02d", messageLength) + "-" + messageSegments[i] + "-";
       String checkSum = String.format("%02d", messageSegment.chars().sum() % 100);
       messageSegments[i] = "<" + messageSegment + checkSum.substring(checkSum.length() - 2) + ">";
     }
