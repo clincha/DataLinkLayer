@@ -93,7 +93,7 @@ public class MessageSender {
     for (int i = 0; i < messageSegmentsCount; i++) {
       String messageSegment = i == (messageSegmentsCount - 1) ? "E-" : "D-";
       messageSegment = messageSegment+ String.format("%02d", messageSegments[i].length()) + "-" + messageSegments[i] + "-";
-      String checkSum = String.format("%02d", messageSegment.chars().sum());
+      String checkSum = String.format("%02d", messageSegment.chars().sum() % 100);
       messageSegments[i] = "<" + messageSegment + checkSum.substring(checkSum.length() - 2) + ">";
     }
 
