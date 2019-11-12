@@ -115,13 +115,13 @@ public class MessageReceiver {
   // You may add private methods if you wish
   private String getFrameData(String frame) throws ProtocolException {
     //MTU
-    if(frame.length() > mtu)
+    if (frame.length() > mtu)
       throw new ProtocolException("Frame size exceeds MTU");
 
     Matcher matcher = pattern.matcher(frame);
     if (matcher.find()) {
       //Checksum
-      String frameChecksum = frame.substring(frame.length() - 3, frame.length() - 1);
+      String frameChecksum = matcher.group(4);
       String calculatedChecksum = String.format("%02d", frame.substring(1, frame.length() - 3).chars().sum() % 100);
       if (!frameChecksum.equals(calculatedChecksum))
         throw new ProtocolException("Invalid checksum");
