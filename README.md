@@ -19,7 +19,7 @@ Additional feedback from marker:
 Excellent. Just one bug. Goes wrong if MTU=10 and message empty (this
 doesn't break the rules of the protocol, but exception thrown).
 
-### Sender Feedback
+### Receiver Feedback
 
 Marks are divided into several categories, each corresponding to a group
 of related tests:
